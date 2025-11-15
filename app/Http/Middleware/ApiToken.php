@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class ApiToken
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if ($request->api_token === env('API_KEY_1')) {
+
+            $request->merge(["ability" => "key_1"]);
+
+        } elseif ($request->api_token === env('API_KEY_2')) {
+
+               $request->merge(["ability" => "key_2"]);
+
+        } elseif ($request->api_token === env('API_KEY_3')) {
+
+               $request->merge(["ability" => "key_3"]);
+
+        } elseif ($request->api_token === env('API_KEY_4')) {
+
+               $request->merge(["ability" => "key_4"]);
+
+        } else {
+           return response()->json('Unauthorized', 401);
+        }
+         return $next($request);
+    }
+}
