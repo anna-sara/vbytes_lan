@@ -12,9 +12,9 @@ class VolunteerController extends Controller
      */
     public function store(Request $request)
     {
-        $ability = $request->ability;
+        $permission = $request->permission;
 
-        if ($ability === "key_1") {
+        if ($permission === "key_1") {
            
 
             $request->validate([
@@ -38,13 +38,13 @@ class VolunteerController extends Controller
 
 
             return response()->json([
-                'success' => true, 'message' => 'Volunteer was created successfully'
+                'code' => 200, 'message' => 'Volunteer was created successfully'
             ]);
            
         }
 
         return response()->json([
-                'success' => false, 'message' => 'Unauthorized'
+                'code' => 401, 'message' => 'Unauthorized'
         ]);
         
     }

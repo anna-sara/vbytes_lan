@@ -15,7 +15,7 @@ class ParticipantExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('participant_id'),
+            ExportColumn::make('lan_id'),
             ExportColumn::make('first_name'),
             ExportColumn::make('surname'),
             ExportColumn::make('grade'),

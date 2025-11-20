@@ -15,24 +15,24 @@ class ApiToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->api_token === env('API_KEY_1')) {
+        if ($request->api_token === config('apikeys.key_1')) {
 
-            $request->merge(["ability" => "key_1"]);
+            $request->merge(["permission" => "key_1"]);
 
-        } elseif ($request->api_token === env('API_KEY_2')) {
+        } elseif ($request->api_token === config('apikeys.key_2')) {
 
-               $request->merge(["ability" => "key_2"]);
+               $request->merge(["permission" => "key_2"]);
 
-        } elseif ($request->api_token === env('API_KEY_3')) {
+        } elseif ($request->api_token === config('apikeys.key_3')) {
 
-               $request->merge(["ability" => "key_3"]);
+               $request->merge(["permission" => "key_3"]);
 
-        } elseif ($request->api_token === env('API_KEY_4')) {
+        } elseif ($request->api_token === config('apikeys.key_4')) {
 
-               $request->merge(["ability" => "key_4"]);
+               $request->merge(["permission" => "key_4"]);
 
         } else {
-           return response()->json('Unauthorized', 401);
+           return response()->json(['code' => 401, 'message' => 'Unauthorized']);
         }
          return $next($request);
     }

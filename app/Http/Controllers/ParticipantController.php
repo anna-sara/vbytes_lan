@@ -14,49 +14,59 @@ class ParticipantController extends Controller
      */
     public function index(Request $request)
     {
-        $ability = $request->ability;
+        $permission = $request->permission;
 
-        if ($ability === "key_1") {
+        if ($permission === "key_1") {
            
             $participants =  Participant::all()->makeHidden(['comment', 'emailed', 'paid', 'member', 'gdpr']);
-            $volunteers = Volunteer::all()->makeHidden(['gdpr']);
+            $volunteers = Volunteer::all()->makeHidden(['gdpr', 'emailed']);
 
             $dataArr = [
-                'participant' => $participants,
-                'volunteer'  => $volunteers
+                'code' => 200,
+                'participants' => $participants,
+                'volunteers'  => $volunteers
             ];
 
             return $dataArr;
         }
 
-        if ($ability === "key_2") {
+        if ($permission === "key_2") {
            
             $participants =  Participant::all()->select('participant_id', 'first_name', 'surname');
             $volunteers = Volunteer::all()->select('first_name', 'surname');
 
             $dataArr = [
-                'participant' => $participants,
-                'volunteer'  => $volunteers
+                'code' => 200,
+                'participants' => $participants,
+                'volunteers'  => $volunteers
             ];
 
             return $dataArr;
         }
 
-        if ($ability === "key_3") {
+        if ($permission === "key_3") {
            
             $participants =  Participant::all()->makeHidden(['comment', 'emailed', 'paid', 'member', 'gdpr']);
            
-            return $participants;
+            return $dataArr = [
+                'code' => 200,
+                'participants' => $participants,
+            ];
         }
 
-        if ($ability === "key_4") {
+        if ($permission === "key_4") {
            
             $participants =  Participant::all()->select('participant_id', 'first_name', 'surname');
            
-            return $participants;
+            return $dataArr = [
+                'code' => 200,
+                'participants' => $participants,
+            ];
         }
 
-        return false;
+        return response()->json([
+                'code' => 401, 'message' => 'Unauthorized'
+        ]);
     }
 
     /**
@@ -72,13 +82,12 @@ class ParticipantController extends Controller
      */
     public function store(Request $request)
     {
-        $ability = $request->ability;
+        $permission = $request->permission;
 
-        if ($ability === "key_1") {
+        if ($permission === "key_1") {
            
 
             $request->validate([
-                'member' => 'required',
                 'first_name' => 'required',
                 'surname' => 'required',
                 'grade' => 'required',
@@ -87,20 +96,20 @@ class ParticipantController extends Controller
                 'guardian_name' => 'required',
                 'guardian_phone' => 'required',
                 'guardian_email' => 'required',
-                'visiting' => 'required',
+                'is_visiting' => 'required',
                 'gdpr' => 'required',
                 'friends' => 'nullable',
                 'special_diet' => 'nullable',
             ]);
 
-            $count = Participant::where('visiting', 0)->count();
+            $count = Participant::where('is_visiting', 0)->count();
             $status = "";
 
-            if ($count < 2 && $request->visiting === 0) {
+            if ($count < 2 && $request->is_visiting === 0) {
                 $status = "lan";
             }
 
-            else if ($request->visiting === 1) {
+            else if ($request->is_visiting === 1) {
                 $status = "besök";
             }
 
@@ -109,7 +118,7 @@ class ParticipantController extends Controller
             }
 
             Participant::create([
-                'member' => $request->member,
+                'member' => 1,
                 'first_name' => $request->first_name,
                 'surname' => $request->surname,
                 'grade' => $request->grade,
@@ -118,7 +127,7 @@ class ParticipantController extends Controller
                 'guardian_name' => $request->guardian_name,
                 'guardian_phone' => $request->guardian_phone,
                 'guardian_email' => $request->guardian_email,
-                'visiting' => $request->visiting,
+                'is_visiting' => $request->is_visiting,
                 'gdpr' => $request->gdpr,
                 'friends' => $request->friends,
                 'special_diet' => $request->special_diet,
@@ -127,13 +136,13 @@ class ParticipantController extends Controller
 
 
             return response()->json([
-                'success' => true, 'message' => 'Participant was created successfully'
+                'code' => 200, 'message' => 'Participant was created successfully'
             ]);
            
         }
 
         return response()->json([
-                'success' => false, 'message' => 'Unauthorized'
+                'code' => 200, 'message' => 'Unauthorized'
         ]);
         
     }

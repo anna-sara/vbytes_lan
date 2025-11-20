@@ -12,55 +12,55 @@ class VersionController extends Controller
      */
     public function index(Request $request)
     {
-          $ability = $request->ability;
+          $permission = $request->permission;
 
-        if ($ability === "key_1") {
+        if ($permission === "key_1") {
             
             $latest_version_participants = Version::where('table', 'participants')->latest()->first();
             $latest_version_volunteers = Version::where('table', 'volunteers')->latest()->first();
 
             return response()->json([
-                'success' => true, 'participants' => $latest_version_participants ? $latest_version_participants->version : null , 'volunteers' => $latest_version_volunteers ? $latest_version_volunteers->version :  null
+                'code' => 200, 'participants' => $latest_version_participants ? $latest_version_participants->version : null , 'volunteers' => $latest_version_volunteers ? $latest_version_volunteers->version :  null
             ]);
            
         }
 
-         if ($ability === "key_2") {
+         if ($permission === "key_2") {
            
             $latest_version_participants = Version::where('table', 'participants')->latest()->first();
             $latest_version_volunteers = Version::where('table', 'volunteers')->latest()->first();
 
             return response()->json([
-                'success' => true, 'participants' => $latest_version_participants ? $latest_version_participants->version : null , 'volunteers' => $latest_version_volunteers ? $latest_version_volunteers->version :  null
+                'code' => 200, 'participants' => $latest_version_participants ? $latest_version_participants->version : null , 'volunteers' => $latest_version_volunteers ? $latest_version_volunteers->version :  null
             ]);
 
         }
 
-         if ($ability === "key_3") {
+         if ($permission === "key_3") {
            
             $latest_version_participants = Version::where('table', 'participants')->latest()->first();
     
 
             return response()->json([
-                'success' => true, 'participants' => $latest_version_participants ? $latest_version_participants->version : null 
+                'code' => 200, 'participants' => $latest_version_participants ? $latest_version_participants->version : null 
             ]);
            
         }
 
-         if ($ability === "key_4") {
+         if ($permission === "key_4") {
            
 
             $latest_version_participants = Version::where('table', 'participants')->latest()->first();
     
 
             return response()->json([
-                'success' => true, 'participants' => $latest_version_participants ? $latest_version_participants->version : null 
+                'code' => 200, 'participants' => $latest_version_participants ? $latest_version_participants->version : null 
             ]);
            
         }
 
         return response()->json([
-                'success' => false, 'message' => 'Unauthorized'
+                'code' => 401, 'message' => 'Unauthorized'
         ]);
     }
 
