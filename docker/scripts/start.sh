@@ -19,9 +19,9 @@ if [ -f "/var/www/html/.env" ]; then
     fi
 fi
 
-if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
-    php artisan migrate --force
-fi
+#if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
+    #php artisan migrate --force
+#fi
 
 if [ "$env" != "local" ]; then
     echo "Caching configuration..."

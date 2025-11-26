@@ -4,7 +4,9 @@ services:
       container_name: laravel-www
       build: 
         context: .
-        dockerfile: docker/php/Dockerfile
+        dockerfile: docker/dev/Dockerfile
+      volumes:
+        - .:/var/www/html
       depends_on:
         - db
       ports:
