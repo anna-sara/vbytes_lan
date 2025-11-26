@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Auth\MultiFactor\Email\EmailAuthentication;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,11 +29,13 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('')
             ->login()
-            ->registration()
+            ->profile()
+            ->multiFactorAuthentication([
+                EmailAuthentication::make(),
+             ])
             ->passwordReset()
             ->emailVerification()
             ->emailChangeVerification()
-            ->profile()
             ->databaseNotifications()
             ->colors([
                 'primary' => Color::Amber,
