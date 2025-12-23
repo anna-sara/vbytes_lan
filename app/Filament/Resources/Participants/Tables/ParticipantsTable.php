@@ -159,7 +159,7 @@ class ParticipantsTable
                 ->action(function (array $data, Participant $record) {
                     $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
                     Mail::to($record->guardian_email)
-                        ->send(new LanMail($mailContent, $record));
+                        ->queue(new LanMail($mailContent, $record));
                     Participant::where('id', $record->id)->update(['emailed' => true]);
                 })
                 ->hidden(fn($record) => !$record->emailed)

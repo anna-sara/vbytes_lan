@@ -12,10 +12,10 @@ use App\Http\Controllers\VersionController;
 //    return $request->user();
 //})->middleware('auth:sanctum');
 
-Route::get('/data/{api_token}', [ParticipantController::class, 'index']  )->middleware([ApiToken::class]);
+Route::get('/data', [ParticipantController::class, 'index']  )->middleware([ApiToken::class]);
 
-Route::get('/version/{api_token}', [VersionController::class, 'index']  )->middleware([ApiToken::class]);
+Route::get('/version', [VersionController::class, 'index']  )->middleware([ApiToken::class]);
 
-Route::post('/participant/{api_token}', [ParticipantController::class, 'store']  )->middleware([ApiToken::class]);
+Route::post('/participant', [ParticipantController::class, 'store']  )->middleware([ApiToken::class]);
 
-Route::post('/volunteer/{api_token}', [VolunteerController::class, 'store']  )->middleware([ApiToken::class]);
+Route::post('/volunteer', [VolunteerController::class, 'store']  )->middleware([ApiToken::class]);

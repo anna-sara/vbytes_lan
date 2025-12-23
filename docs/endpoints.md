@@ -1,13 +1,13 @@
 ## Endpoints
 
 <details>
- <summary><code>GET</code> <code><b>/data/{api_token}</b></code></summary>
+ <summary><code>GET</code> <code><b>/data</b></code></summary>
 
-##### Parameters
+##### Headers
 
 > | name        |  type      | data type      | description                                                  |
 > |-------------|------------|----------------|--------------------------------------------------------------|
-> | `api_token` |  required  | string         | Api key with permission                                      |
+> | `x-api-key` |  required  | string         | Api key with permission                                      |
 
 
 ##### Responses
@@ -124,13 +124,13 @@
 </details>
 
 <details>
- <summary><code>GET</code> <code><b>/version/{api_token}</b></code></summary>
+ <summary><code>GET</code> <code><b>/version</b></code></summary>
 
-##### Parameters
+##### Headers
 
 > | name        |  type      | data type      | description                                                  |
 > |-------------|------------|----------------|--------------------------------------------------------------|
-> | `api_token` |  required  | string         | Api key with permission                                      |
+> | `x-api-key` |  required  | string         | Api key with permission                                      |
 
 ##### Responses
 
@@ -181,13 +181,13 @@
 </details>
 
 <details>
- <summary><code>POST</code> <code><b>/participant/{api_token}</b></code></summary>
+ <summary><code>POST</code> <code><b>/participant</b></code></summary>
 
-##### Parameters
+##### Headers
 
 > | name        |  type     | data type               | description                                                           |
 > |-------------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | `api_token` |  required | string                  | Api key with permission                                               |
+> | `x-api-key` |  required | string                  | Api key with permission                                               |
 
 ##### Body data 
 
@@ -237,13 +237,13 @@
 </details>
 
 <details>
- <summary><code>POST</code> <code><b>/volunteer/{api_token}</b></code></summary>
+ <summary><code>POST</code> <code><b>/volunteer</b></code></summary>
 
-##### Parameters
+##### Headers
 
 > | name        |  type     | data type               | description                                                           |
 > |-------------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | `api_token` |  required | string                  | Api key with permission                                               |
+> | `x-api-key` |  required | string                  | Api key with permission                                               |
 
 
 ##### Body data 

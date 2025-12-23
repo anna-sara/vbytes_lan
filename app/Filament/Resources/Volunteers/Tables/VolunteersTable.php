@@ -80,7 +80,7 @@ class VolunteersTable
                 ->action(function (array $data, Volunteer $record) {
                     $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
                     Mail::to($record->email)
-                        ->send(new LanMail($mailContent, $record));
+                        ->queue(new LanMail($mailContent, $record));
                     Volunteer::where('id', $record->id)->update(['emailed' => true]);
                 })
                 ->hidden(fn($record) => $record->emailed),
