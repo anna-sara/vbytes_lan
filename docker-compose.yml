@@ -1,52 +1,31 @@
 services:
-  web:
-      image: laravel-www
-      container_name: laravel-www
-      build: 
-        context: .
-        dockerfile: docker/php/Dockerfile
-      depends_on:
-        - db
+  api:
+      image: php
+      build: .
+      volumes:
+        - .:/var/www/html
       ports:
         - "8080:80"
-      environment:
-        CONTAINER_ROLE: app
       networks:
         - app      
   db:
-    container_name: laravel-mysql
     image: "mariadb"
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "vbytes_lan"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "password"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
-      -  "mysql:/var/lib/mysql"
+      -  "appdb:/var/lib/mysql"
     networks:
-      - app  
-  queue:
-      image: laravel-www
-      container_name: laravel-queue
-      depends_on:
-        - web
-        - db
-      volumes:
-        - ./:/var/www/html
-      networks:
-        - app    
-      environment:
-        APP_ENV: ${APP_ENV}
-        CONTAINER_ROLE: queue
-        CACHE_STORE: ${CACHE_STORE}
-        SESSION_DRIVER: ${SESSION_DRIVER}
-        QUEUE_CONNECTION: ${QUEUE_CONNECTION}
+      - app   
 networks:
   app:
     driver: bridge
 volumes:
-  mysql:
+  appdb:
     driver: local
+
