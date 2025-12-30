@@ -70,12 +70,15 @@
 {
     "participants": [
         {
+            "lan_id": 1,
             "first_name": "John",
-            "surname": "Doe"
+            "surname": "Doe",
+            "guardian_name": "John Doe"
         }
     ],
     "volunteers": [
         {
+            "lan_id": 1,
             "first_name": "Jane",
             "surname": "Doe"
         }
@@ -114,8 +117,10 @@
 {
     "participants": [
         {
+            "lan_id": 1,
             "first_name": "John",
-            "surname": "Doe"
+            "surname": "Doe",
+            "guardian_name": "John Doe"
         }
     ]
 }

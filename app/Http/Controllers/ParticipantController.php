@@ -18,8 +18,12 @@ class ParticipantController extends Controller
 
         if ($permission === "key_1") {
            
-            $participants =  Participant::all()->makeHidden(['comment', 'emailed', 'paid', 'member', 'gdpr']);
-            $volunteers = Volunteer::all()->makeHidden(['gdpr', 'emailed']);
+            $participants =  Participant::whereNotNull('lan_id')
+            ->select('id','lan_id', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
+            ->get();
+            $volunteers = Volunteer::whereNotNull('lan_id')
+            ->select('id','lan_id', 'first_name', 'surname','phone','email', 'areas', 'created_at', 'updated_at')
+            ->get();
 
             $dataArr = [
                 'code' => 200,
@@ -32,8 +36,8 @@ class ParticipantController extends Controller
 
         if ($permission === "key_2") {
            
-            $participants =  Participant::all()->select('participant_id', 'first_name', 'surname');
-            $volunteers = Volunteer::all()->select('first_name', 'surname');
+            $participants =  Participant::whereNotNull('lan_id')->select('lan_id', 'first_name', 'surname', 'guardian_name')->get();
+            $volunteers = Volunteer::whereNotNull('lan_id')->select('lan_id','first_name', 'surname')->get();
 
             $dataArr = [
                 'code' => 200,
@@ -46,7 +50,9 @@ class ParticipantController extends Controller
 
         if ($permission === "key_3") {
            
-            $participants =  Participant::all()->makeHidden(['comment', 'emailed', 'paid', 'member', 'gdpr']);
+            $participants =  Participant::whereNotNull('lan_id')
+            ->select('id','lan_id', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
+            ->get();
            
             return $dataArr = [
                 'code' => 200,
@@ -56,7 +62,7 @@ class ParticipantController extends Controller
 
         if ($permission === "key_4") {
            
-            $participants =  Participant::all()->select('participant_id', 'first_name', 'surname');
+            $participants =  Participant::whereNotNull('lan_id')->select('lan_id', 'first_name', 'surname', 'guardian_name')->get();
            
             return $dataArr = [
                 'code' => 200,
