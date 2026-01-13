@@ -198,6 +198,7 @@
 
 > | name             |  type     | data type                | description                                                           |
 > |------------------|-----------|--------------------------|-----------------------------------------------------------------------|
+> | `member`         |  required | boolean                  | Participant membership                                                |
 > | `first_name`     |  required | string                   | Participant first name                                                |
 > | `surame`         |  required | string                   | Participant surname                                                   |
 > | `grade`          |  required | string                   | Participant grade                                                     |
@@ -214,6 +215,7 @@
 
 ```json
 {
+    "member": 1,
     "first_name": "Joe",
     "surname": "Doe",
     "grade": "8",

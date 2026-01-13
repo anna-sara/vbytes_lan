@@ -94,6 +94,7 @@ class ParticipantController extends Controller
            
 
             $request->validate([
+                'member' => 'required',
                 'first_name' => 'required',
                 'surname' => 'required',
                 'grade' => 'required',
@@ -111,7 +112,7 @@ class ParticipantController extends Controller
             $count = Participant::where('is_visiting', 0)->count();
             $status = "";
 
-            if ($count < 2 && $request->is_visiting === 0) {
+            if ($count < config('app.lanplace_amount') && $request->is_visiting === 0) {
                 $status = "lan";
             }
 
@@ -124,7 +125,7 @@ class ParticipantController extends Controller
             }
 
             Participant::create([
-                'member' => 1,
+                'member' => $request->member,
                 'first_name' => $request->first_name,
                 'surname' => $request->surname,
                 'grade' => $request->grade,

@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'lanplace_amount' => env('LAN_PLACE_AMOUNT'),
+
 ];

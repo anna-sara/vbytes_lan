@@ -13,9 +13,8 @@ class CreateParticipant extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-
         $count = Participant::where('is_visiting', false)->count();
-        if ($count < 1 && !$data['is_visiting']) {
+        if ($count < config('app.lanplace_amount') && !$data['is_visiting']) {
              $data['status'] = "lan";
         }
 

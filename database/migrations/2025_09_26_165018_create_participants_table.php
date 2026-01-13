@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
             $table->integer('lan_id')->nullable();
-            $table->boolean('member');
+            $table->boolean('member')->default(false);
             $table->string('first_name');
             $table->string('surname');
             $table->string('grade');
