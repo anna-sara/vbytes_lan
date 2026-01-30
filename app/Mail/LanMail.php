@@ -35,7 +35,7 @@ class LanMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject:  mb_decode_mimeheader($this->title),
+            subject: $this->title,
         );
     }
 

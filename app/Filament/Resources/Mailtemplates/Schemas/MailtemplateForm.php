@@ -22,6 +22,7 @@ class MailtemplateForm
                     ->required()
                      ->columnSpanFull(),
                 TextInput::make('type')
+                    ->label('Greeting')
                     ->required()
                     ->columnSpanFull(),
                 MarkdownEditor::make('content')

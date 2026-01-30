@@ -67,6 +67,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'charset' => 'UTF-8',
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
