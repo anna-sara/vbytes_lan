@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('')
+            ->path('logga_in')
             ->login()
             ->profile()
             ->multiFactorAuthentication([
