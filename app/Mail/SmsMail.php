@@ -28,8 +28,6 @@ class SmsMail extends Mailable
             // 1. Remove everything that is NOT a digit
             $cleaned = preg_replace('/[^0-9]/', '', $phoneNumber);
 
-            info($cleaned);
-
             // 2. Check existing prefixes and format accordingly
             if (str_starts_with($cleaned, '0046')) {
                 // Already correct

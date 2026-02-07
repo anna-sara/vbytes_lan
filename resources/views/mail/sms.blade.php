@@ -1,1 +1,1 @@
-<p>Hej! Du har fått mail från vBytes angående LAN 2026.</p>
+Hej! Du har fått mail från vBytes angående LAN 2026.
