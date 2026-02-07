@@ -15,6 +15,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LanMail;
+use App\Mail\SmsMail;
 use Filament\Support\Icons\Heroicon;
 use App\Filament\Exports\ParticipantExporter;
 use Filament\Actions\ExportAction;
@@ -146,6 +147,9 @@ class ParticipantsTable
                     Mail::to($record->guardian_email)
                         ->send(new LanMail($mailContent, $record));
                     Participant::where('id', $record->id)->update(['emailed' => true]);
+                    Mail::to(config('app.smsUrl'))
+                        ->send(new SmsMail($record));
+        
                 })
                 ->hidden(fn($record) => $record->emailed),
                 Action::make('sendRemindEmail')
@@ -162,8 +166,7 @@ class ParticipantsTable
                         ->queue(new LanMail($mailContent, $record));
                     Participant::where('id', $record->id)->update(['emailed' => true]);
                 })
-                ->hidden(fn($record) => !$record->emailed)
-                
+                ->hidden(fn($record) => !$record->emailed),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

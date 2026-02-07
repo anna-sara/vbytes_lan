@@ -126,5 +126,6 @@ return [
     ],
 
     'lanplace_amount' => env('LAN_PLACE_AMOUNT'),
+    'smsUrl' => env('SMS_URL'),
 
 ];
