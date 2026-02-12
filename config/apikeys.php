@@ -14,5 +14,5 @@ return [
     'key_2' => env('API_KEY_2'),
     'key_3' => env('API_KEY_3'),
     'key_4' => env('API_KEY_4'),
-    
+    'key_5' => env('API_KEY_5')
 ];

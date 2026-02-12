@@ -15,7 +15,7 @@ class ApiToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-         if ($request->header('X-API-KEY') === config('apikeys.key_1')) {
+        if ($request->header('X-API-KEY') === config('apikeys.key_1')) {
 
             $request->merge(["permission" => "key_1"]);
 
@@ -30,6 +30,10 @@ class ApiToken
         } elseif ($request->header('X-API-KEY') === config('apikeys.key_4')) {
 
                $request->merge(["permission" => "key_4"]);
+
+        } elseif ($request->header('X-API-KEY') === config('apikeys.key_5')) {
+
+               $request->merge(["permission" => "key_5"]);
 
         } else {
            return response()->json(['code' => 401, 'message' => 'Unauthorized']);

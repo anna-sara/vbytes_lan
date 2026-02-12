@@ -16,7 +16,7 @@ class ParticipantController extends Controller
     {
         $permission = $request->permission;
 
-        if ($permission === "key_1") {
+        if ($permission === "key_5") {
            
             $participants =  Participant::whereNotNull('lan_id')
             ->select('id','lan_id', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
@@ -149,7 +149,7 @@ class ParticipantController extends Controller
         }
 
         return response()->json([
-                'code' => 200, 'message' => 'Unauthorized'
+                'code' => 401, 'message' => 'Unauthorized'
         ]);
         
     }
