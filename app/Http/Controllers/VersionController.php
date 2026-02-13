@@ -14,7 +14,7 @@ class VersionController extends Controller
     {
           $permission = $request->permission;
 
-        if ($permission === "key_1") {
+        if ($permission === "key_5") {
             
             $latest_version_participants = Version::where('table', 'participants')->latest()->first();
             $latest_version_volunteers = Version::where('table', 'volunteers')->latest()->first();

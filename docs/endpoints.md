@@ -1,7 +1,7 @@
 ## Endpoints
 
 <details>
- <summary><code>GET</code> <code><b>/data</b></code></summary>
+ <summary><code>GET</code> <code><b>/api/data</b></code></summary>
 
 ##### Headers
 
@@ -129,7 +129,7 @@
 </details>
 
 <details>
- <summary><code>GET</code> <code><b>/version</b></code></summary>
+ <summary><code>GET</code> <code><b>/api/version</b></code></summary>
 
 ##### Headers
 
@@ -186,7 +186,7 @@
 </details>
 
 <details>
- <summary><code>POST</code> <code><b>/participant</b></code></summary>
+ <summary><code>POST</code> <code><b>/api/participant</b></code></summary>
 
 ##### Headers
 
@@ -244,7 +244,7 @@
 </details>
 
 <details>
- <summary><code>POST</code> <code><b>/volunteer</b></code></summary>
+ <summary><code>POST</code> <code><b>/api/volunteer</b></code></summary>
 
 ##### Headers
 
