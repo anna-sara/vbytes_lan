@@ -28,6 +28,7 @@ class ParticipantsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->paginated([10, 25, 50, 100, 'all'])
             ->groups([
                  Group::make('status')
                 ->label('Status')
