@@ -43,7 +43,9 @@ class VolunteerForm
                     'Säkerhet' => 'Säkerhet',
                     'Städning' => 'Städning',
                     'Entré & Incheckning' => 'Entré & Incheckning',
-                    'Teknisk Support' => 'Teknisk Support'
+                    'Teknisk Support' => 'Teknisk Support',
+                    'Rådda' => 'Rådda',
+                    'Turneringar' => 'Turneringar'
                 ]),
                 Textarea::make('comment')
                     ->columnSpan('full'),
