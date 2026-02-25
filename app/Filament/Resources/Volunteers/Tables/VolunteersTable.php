@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LanMail;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextInputColumn;
 use App\Models\Volunteer;
 use App\Models\Mailtemplate;
 
@@ -23,7 +24,7 @@ class VolunteersTable
         return $table
             ->recordAction(null)
             ->columns([
-                TextColumn::make('lan_id')
+               TextInputColumn::make('lan_id')
                     ->label('ID')
                     ->searchable()
                     ->sortable(),

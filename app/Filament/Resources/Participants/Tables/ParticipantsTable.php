@@ -42,7 +42,7 @@ class ParticipantsTable
                     ->exporter(ParticipantExporter::class),
                 ])
             ->columns([
-                TextColumn::make('lan_id')
+                TextInputColumn::make('lan_id')
                     ->label('ID')
                     ->searchable()
                     ->sortable(),
