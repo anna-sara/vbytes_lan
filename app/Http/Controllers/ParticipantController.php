@@ -112,11 +112,11 @@ class ParticipantController extends Controller
             $count = Participant::where('is_visiting', 0)->count();
             $status = "";
 
-            if ($count < config('app.lanplace_amount') && $request->is_visiting === 0) {
+            if ($count < config('app.lanplace_amount') && ! $request->is_visiting) {
                 $status = "lan";
             }
 
-            else if ($request->is_visiting === 1) {
+            else if (! $request->is_visiting) {
                 $status = "besök";
             }
 
