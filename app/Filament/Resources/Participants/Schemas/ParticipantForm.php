@@ -73,7 +73,6 @@ class ParticipantForm
                 TextInput::make('surname')
                     ->required(),
                 TextInput::make('grade')
-                    ->integer()
                     ->columnSpan('full')
                     ->required(),
                 TextInput::make('phone')

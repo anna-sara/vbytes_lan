@@ -39,9 +39,11 @@ class VolunteerForm
                  ->required()
                  ->columnSpan('full')
                 ->options([
-                    'Städ' => 'Städ',
+                    'Kiosk & Kök' => 'Kiosk & Kök',
                     'Säkerhet' => 'Säkerhet',
-                    'Kiosk' => 'Kiosk',
+                    'Städning' => 'Städning',
+                    'Entré & Incheckning' => 'Entré & Incheckning',
+                    'Teknisk Support' => 'Teknisk Support'
                 ]),
                 Textarea::make('comment')
                     ->columnSpan('full'),
