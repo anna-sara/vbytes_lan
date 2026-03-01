@@ -1,4 +1,4 @@
 <div>
     <h1>{{$title}}</h1>
-    <div>{{$type}} {{$name}} {!! str($content)->markdown()->sanitizeHtml() !!}</div>
+    <div><span>{{$type}} {{$name}}</span> {!! str($content)->markdown()->sanitizeHtml() !!}</div>
 <div>
