@@ -1,4 +1,4 @@
 <div>
     <h1>{{$title}}</h1>
-    <div><span>{{$type}} {{$name}}</span>{!! str($content)->markdown()->sanitizeHtml() !!}</div>
+    <div>{!! str($content)->replace('[NAME]', $name)->markdown()->sanitizeHtml() !!}</div>
 <div>
