@@ -19,7 +19,7 @@ class ParticipantController extends Controller
         if ($permission === "key_5") {
            
             $participants =  Participant::whereNotNull('lan_id')
-            ->select('id','lan_id', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
+            ->select('id','lan_id', 'ssn','first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
             ->get();
             $volunteers = Volunteer::whereNotNull('lan_id')
             ->select('id','lan_id', 'first_name', 'surname','phone','email', 'areas', 'created_at', 'updated_at')
@@ -51,7 +51,7 @@ class ParticipantController extends Controller
         if ($permission === "key_3") {
            
             $participants =  Participant::whereNotNull('lan_id')
-            ->select('id','lan_id', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
+            ->select('id','lan_id', 'ssn', 'first_name', 'surname','grade','phone','email', 'guardian_name', 'guardian_phone', 'guardian_email', 'is_visiting','friends', 'special_diet', 'status','created_at', 'updated_at')
             ->get();
            
             return $dataArr = [
@@ -96,6 +96,7 @@ class ParticipantController extends Controller
             $request->validate([
                 'member' => 'required',
                 'first_name' => 'required',
+                'ssn' => 'nullable',
                 'surname' => 'required',
                 'grade' => 'required',
                 'phone' => 'nullable',
@@ -116,7 +117,7 @@ class ParticipantController extends Controller
                 $status = "lan";
             }
 
-            else if (! $request->is_visiting) {
+            else if ($request->is_visiting) {
                 $status = "besök";
             }
 
@@ -126,6 +127,7 @@ class ParticipantController extends Controller
 
             Participant::create([
                 'member' => $request->member,
+                'ssn' => $request->ssn,
                 'first_name' => $request->first_name,
                 'surname' => $request->surname,
                 'grade' => $request->grade,

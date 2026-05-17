@@ -68,6 +68,11 @@ class ParticipantForm
                         'reserv' => 'Reserv',
                         'besök' => 'Besök',
                     ]),
+                TextInput::make('ssn')
+                    ->label('SSN')
+                    ->default(null)
+                    ->length(12)
+                    ->columnSpan('full'),
                 TextInput::make('first_name')
                     ->required(),
                 TextInput::make('surname')

@@ -25,7 +25,8 @@ class Participant extends Model
         'status',
         'emailed',
         'comment',
-        'paid'
+        'paid',
+        'ssn'
     ];
 
     protected static function booted()

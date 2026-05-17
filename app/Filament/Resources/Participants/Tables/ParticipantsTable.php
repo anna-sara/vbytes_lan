@@ -20,8 +20,11 @@ use Filament\Support\Icons\Heroicon;
 use App\Filament\Exports\ParticipantExporter;
 use Filament\Actions\ExportAction;
 use Filament\Tables\Columns\TextInputColumn;
+use Illuminate\Validation\Rule;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Columns\Summarizers\Count;
+use Filament\Tables\Columns\ToggleColumn;
 
 class ParticipantsTable
 {
@@ -45,7 +48,14 @@ class ParticipantsTable
                 TextInputColumn::make('lan_id')
                     ->label('ID')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->rules(fn ($record) => [
+                        Rule::unique('participants', 'lan_id')->ignore($record->id),
+                    ])
+                    ->validationMessages([
+                        'unique' => 'LAN ID is already assigned to another participant.',
+                    ]),
                 TextColumn::make('status')
                 ->label('Status')
                 ->badge()
@@ -56,12 +66,11 @@ class ParticipantsTable
                     'besök' => 'gray'
                 })
               ->formatStateUsing(fn (string $state): string => __(ucfirst($state))),
-                IconColumn::make('paid')
-                    ->boolean()
-                    ->sortable(),
-                IconColumn::make('emailed')
-                    ->boolean()
-                    ->sortable(),
+                TextColumn::make('ssn')
+                    ->label('SSN')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('first_name')
                     ->searchable()
                     ->sortable(),
@@ -99,11 +108,13 @@ class ParticipantsTable
                     ->badge()
                     ->color('gray')
                     ->toggleable(isToggledHiddenByDefault: true),
-                   
-                IconColumn::make('member')
+                ToggleColumn::make('paid')
+                    ->sortable(),
+                ToggleColumn::make('member')
+                    ->sortable(),
+                IconColumn::make('emailed')
                     ->boolean()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('comment')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -129,7 +140,13 @@ class ParticipantsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'lan' => 'Ordinarie',
+                        'reserv' => 'Reserv',
+                        'besök' => 'Besök',
+                    ])
+                    ->multiple(),
             ])
             ->recordActions([
                 EditAction::make()
