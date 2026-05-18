@@ -9,6 +9,7 @@ class Mailtemplate extends Model
     protected $fillable = [
         'title',
         'content',
-        'type'
+        'type',
+        'draft'
     ];
 }

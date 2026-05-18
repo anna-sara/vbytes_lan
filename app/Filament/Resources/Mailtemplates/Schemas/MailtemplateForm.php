@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Mailtemplates\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\MarkdownEditor;
 use DiscoveryDesign\FilamentGaze\Forms\Components\GazeBanner;
@@ -21,12 +22,12 @@ class MailtemplateForm
                 TextInput::make('title')
                     ->required()
                      ->columnSpanFull(),
-                TextInput::make('type')
-                    ->label('Greeting')
-                    ->required()
-                    ->columnSpanFull(),
                 MarkdownEditor::make('content')
                     ->required()
+                    ->columnSpanFull(),
+                Toggle::make('draft')
+                    ->default(false)
+                    ->onColor('warning')
                     ->columnSpanFull(),
             ]);
     }

@@ -158,7 +158,7 @@ class ParticipantsTable
                 ->schema([
                     Select::make('mailtemplate')
                     ->label('Mailtemplate')
-                    ->options(Mailtemplate::all()->pluck('title', 'id'))
+                    ->options(Mailtemplate::where('draft', false)->pluck('title', 'id'))
                 ])
                 ->action(function (array $data, Participant $record) {
                     $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
@@ -176,7 +176,7 @@ class ParticipantsTable
                 ->schema([
                     Select::make('mailtemplate')
                     ->label('Mailtemplate')
-                    ->options(Mailtemplate::all()->pluck('title', 'id'))
+                    ->options(Mailtemplate::where('draft', false)->pluck('title', 'id'))
                 ])
                 ->action(function (array $data, Participant $record) {
                     $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
