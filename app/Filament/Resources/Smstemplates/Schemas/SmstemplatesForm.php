@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Smstemplates\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Textarea;
 use DiscoveryDesign\FilamentGaze\Forms\Components\GazeBanner;
 
 class SmstemplatesForm
@@ -19,6 +19,10 @@ class SmstemplatesForm
                     ->hideOnCreate(),
                 TextInput::make('title')
                     ->required()
+                    ->columnSpanFull(),
+                Textarea::make('content')
+                    ->required()
+                    ->rows(5)
                     ->columnSpanFull(),
                 Toggle::make('draft')
                     ->default(false)
