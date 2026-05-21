@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\Mailtemplates\Tables;
+namespace App\Filament\Resources\Smstemplates\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 
-class MailtemplatesTable
+class SmstemplatesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 ToggleColumn::make('draft')
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -29,7 +31,8 @@ class MailtemplatesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('draft')
+                    ->label('Draft'),
             ])
             ->recordActions([
                 EditAction::make(),

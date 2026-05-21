@@ -1,34 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\Mailtemplates\Schemas;
+namespace App\Filament\Resources\Smstemplates\Schemas;
 
-use App\Models\Smstemplate;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\MarkdownEditor;
 use DiscoveryDesign\FilamentGaze\Forms\Components\GazeBanner;
 
-class MailtemplateForm
+class SmstemplatesForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
                 GazeBanner::make()
-            ->pollTimer(10)
-            ->hideOnCreate(),
+                    ->pollTimer(10)
+                    ->hideOnCreate(),
                 TextInput::make('title')
                     ->required()
-                     ->columnSpanFull(),
-                MarkdownEditor::make('content')
-                    ->required()
-                    ->columnSpanFull(),
-                Select::make('smstemplate_id')
-                    ->label('SMS template')
-                    ->options(Smstemplate::where('draft', false)->pluck('title', 'id'))
-                    ->nullable()
                     ->columnSpanFull(),
                 Toggle::make('draft')
                     ->default(false)

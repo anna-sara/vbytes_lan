@@ -18,7 +18,13 @@ class MailtemplateResource extends Resource
 {
     protected static ?string $model = Mailtemplate::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
+
+    protected static ?string $navigationLabel = 'Mail templates';
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Templates';
+
+    protected static ?int $navigationSort = 99;
 
     public static function form(Schema $schema): Schema
     {

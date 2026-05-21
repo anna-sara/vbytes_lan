@@ -33,10 +33,8 @@ class VolunteersTable
                TextInputColumn::make('lan_id')
                     ->label('ID')
                     ->searchable()
-                    ->sortable(),
-                IconColumn::make('emailed')
-                    ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('first_name')
                     ->searchable()
                     ->sortable(),
@@ -76,36 +74,22 @@ class VolunteersTable
                 EditAction::make()
                 ->modalWidth()
                 ->slideOver(),
-                Action::make('sendEmail')
-                ->label('Send email')
-                ->icon(Heroicon::Envelope)
-                ->schema([
-                    Select::make('mailtemplate')
-                    ->label('Mailtemplate')
-                    ->options(Mailtemplate::all()->pluck('title', 'id'))
-                ])
-                ->action(function (array $data, Volunteer $record) {
-                    $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
-                    Mail::to($record->email)
-                        ->queue(new LanMail($mailContent, $record));
-                    Volunteer::where('id', $record->id)->update(['emailed' => true]);
-                })
-                ->hidden(fn($record) => $record->emailed),
-                Action::make('sendRemindEmail')
-                ->label('Send remind email')
-                ->icon(Heroicon::Envelope)
-                ->schema([
-                    Select::make('mailtemplate')
-                    ->label('Mailtemplate')
-                    ->options(Mailtemplate::all()->pluck('title', 'id'))
-                ])
-                ->action(function (array $data, Volunteer $record) {
-                    $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
-                    Mail::to($record->email)
-                        ->send(new LanMail($mailContent, $record));
-                    Volunteer::where('id', $record->id)->update(['emailed' => true]);
-                })
-                ->hidden(fn($record) => !$record->emailed)
+                //Action::make('sendEmail')
+                //->label('Send email')
+                //->icon(Heroicon::Envelope)
+                //->schema([
+                //    Select::make('mailtemplate')
+                //    ->label('Mailtemplate')
+                //    ->options(Mailtemplate::all()->pluck('title', 'id'))
+                //])
+                //->action(function (array $data, Volunteer $record) {
+                //    if ($record->email) {
+                //        $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
+                //        Mail::to($record->email)
+                //            ->queue(new LanMail($mailContent, $record));
+                //        Volunteer::where('id', $record->id)->update(['emailed' => true]);
+                //    }
+                //}),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

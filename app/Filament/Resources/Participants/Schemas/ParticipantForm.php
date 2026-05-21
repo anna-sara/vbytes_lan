@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Participants\Schemas;
 
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Grid;
 use DiscoveryDesign\FilamentGaze\Forms\Components\GazeBanner;
+use Illuminate\Support\HtmlString;
 
 class ParticipantForm
 {
@@ -101,6 +103,29 @@ class ParticipantForm
                     ->columnSpan('full'),
                 Textarea::make('comment')
                     ->columnSpan('full'),
+                Placeholder::make('email_log')
+                    ->label('Emails sent')
+                    ->columnSpan('full')
+                    ->hidden(fn ($record) => $record === null)
+                    ->content(function ($record) {
+                        if (!$record) {
+                            return '—';
+                        }
+                        $logs = $record->emailLogs()->with(['mailtemplate', 'smstemplate'])->latest()->get();
+                        if ($logs->isEmpty()) {
+                            return new HtmlString('<span class="text-gray-400 text-sm">No emails sent</span>');
+                        }
+                        $rows = $logs->map(function ($log) {
+                            $date = $log->created_at->format('Y-m-d H:i');
+                            $mail = e($log->mailtemplate?->title ?? '—');
+                            $sms = $log->smstemplate ? ' + SMS: ' . e($log->smstemplate->title) : '';
+                            $error = $log->error
+                                ? ' <span class="text-red-500 font-medium">&#9888; ' . e($log->error) . '</span>'
+                                : '';
+                            return "<li class=\"text-sm py-1 border-b border-gray-100 last:border-0\"><span class=\"text-gray-400\">{$date}</span> &mdash; {$mail}{$sms}{$error}</li>";
+                        })->join('');
+                        return new HtmlString("<ul class=\"divide-y divide-gray-100\">{$rows}</ul>");
+                    }),
             ]);
     }
 }

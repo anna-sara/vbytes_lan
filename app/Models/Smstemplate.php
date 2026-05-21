@@ -4,18 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Mailtemplate extends Model
+class Smstemplate extends Model
 {
     protected $fillable = [
         'title',
         'content',
         'type',
         'draft',
-        'smstemplate_id',
     ];
-
-    public function smstemplate()
-    {
-        return $this->belongsTo(Smstemplate::class);
-    }
 }

@@ -40,6 +40,18 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->renderHook(
+                'panels::head.end',
+                fn () => '<style>.tippy-content { white-space: pre-line; } .fi-ta-cell.fi-ta-summary-header-cell.fi-align-start { color: transparent; } .fi-topbar-start { padding-top: 0.5rem !important; padding-bottom: 1rem !important; }</style>',
+            )
+            ->navigationGroups([
+                \Filament\Navigation\NavigationGroup::make('Templates'),
+                \Filament\Navigation\NavigationGroup::make('Logs'),
+            ])
+            ->brandName('vBytes LAN')
+            ->favicon(asset('images/vbytes-logo.png'))
+             ->brandLogo(asset('images/vbytes-logo.png'))
+             ->brandLogoHeight('5rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

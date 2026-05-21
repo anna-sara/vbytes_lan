@@ -29,6 +29,11 @@ class Participant extends Model
         'ssn'
     ];
 
+    public function emailLogs()
+    {
+        return $this->hasMany(EmailLog::class);
+    }
+
     protected static function booted()
     {
         static::created(function ($post) {

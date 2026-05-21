@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources\Participants\Tables;
 
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Illuminate\Database\Eloquent\Collection;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Models\EmailLog;
 use App\Models\Participant;
 use App\Models\Mailtemplate;
 use Filament\Tables\Columns\SelectColumn;
@@ -32,10 +35,12 @@ class ParticipantsTable
     {
         return $table
             ->paginated([10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(100)
             ->groups([
-                 Group::make('status')
-                ->label('Status')
-                ->collapsible(),
+                Group::make('status')
+                    ->label('Status')
+                    ->getTitleFromRecordUsing(fn ($record) => ucfirst($record->status))
+                    ->collapsible(),
             ])
              ->defaultGroup('status')
             //->groupsOnly()
@@ -59,7 +64,6 @@ class ParticipantsTable
                 TextColumn::make('status')
                 ->label('Status')
                 ->badge()
-                ->summarize(Count::make()->label(''))
                 ->color(fn (string $state): string => match ($state) {
                     'lan' => 'success',
                     'reserv' => 'warning',
@@ -73,7 +77,8 @@ class ParticipantsTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('first_name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Count::make()->label('')),
                 TextColumn::make('surname')
                     ->searchable()
                     ->sortable(),
@@ -114,7 +119,16 @@ class ParticipantsTable
                     ->sortable(),
                 IconColumn::make('emailed')
                     ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->tooltip(function ($record) {
+                        $logs = $record->emailLogs()->with(['mailtemplate', 'smstemplate'])->latest()->get();
+                        if ($logs->isEmpty()) {
+                            return 'No emails sent';
+                        }
+                        return $logs->map(fn($log) =>
+                            ' Mail: ' . ($log->mailtemplate?->title ?? '—')
+                        )->join("\n");
+                    }),
                 TextColumn::make('comment')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -161,34 +175,72 @@ class ParticipantsTable
                     ->options(Mailtemplate::where('draft', false)->pluck('title', 'id'))
                 ])
                 ->action(function (array $data, Participant $record) {
-                    $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
-                    Mail::to($record->guardian_email)
-                        ->send(new LanMail($mailContent, $record));
-                    Participant::where('id', $record->id)->update(['emailed' => true]);
-                    Mail::to(config('app.smsUrl'))
-                        ->send(new SmsMail($record));
-        
-                })
-                ->hidden(fn($record) => $record->emailed),
-                Action::make('sendRemindEmail')
-                ->label('Send remind email')
-                ->icon(Heroicon::Envelope)
-                ->schema([
-                    Select::make('mailtemplate')
-                    ->label('Mailtemplate')
-                    ->options(Mailtemplate::where('draft', false)->pluck('title', 'id'))
-                ])
-                ->action(function (array $data, Participant $record) {
-                    $mailContent = Mailtemplate::where('id', $data['mailtemplate'])->get();
-                    Mail::to($record->guardian_email)
-                        ->queue(new LanMail($mailContent, $record));
-                    Participant::where('id', $record->id)->update(['emailed' => true]);
-                })
-                ->hidden(fn($record) => !$record->emailed),
+                    $mailtemplate = Mailtemplate::with('smstemplate')->find($data['mailtemplate']);
+                    if ($record->guardian_email) {
+                        $error = null;
+                        try {
+                            Mail::to($record->guardian_email)
+                                ->send(new LanMail(collect([$mailtemplate]), $record));
+                            Participant::where('id', $record->id)->update(['emailed' => true]);
+                            if ($mailtemplate->smstemplate && config('app.smsUrl')) {
+                                Mail::to(config('app.smsUrl'))
+                                    ->send(new SmsMail($record, $mailtemplate->smstemplate->content));
+                            }
+                        } catch (\Throwable $e) {
+                            $error = $e->getMessage();
+                        }
+                        EmailLog::create([
+                            'participant_id'  => $record->id,
+                            'lan_id'          => $record->lan_id,
+                            'guardian_email'  => $record->guardian_email,
+                            'mailtemplate_id' => $mailtemplate->id,
+                            'smstemplate_id'  => $mailtemplate->smstemplate?->id,
+                            'error'           => $error,
+                        ]);
+                    }
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('bulkSendEmail')
+                        ->label('Send email')
+                        ->icon(Heroicon::Envelope)
+                        ->schema([
+                            Select::make('mailtemplate')
+                                ->label('Mailtemplate')
+                                ->options(Mailtemplate::where('draft', false)->pluck('title', 'id'))
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $mailtemplate = Mailtemplate::with('smstemplate')->find($data['mailtemplate']);
+                            foreach ($records as $record) {
+                                if (!$record->guardian_email) {
+                                    continue;
+                                }
+                                $error = null;
+                                try {
+                                    Mail::to($record->guardian_email)
+                                        ->queue(new LanMail(collect([$mailtemplate]), $record));
+                                    if ($mailtemplate->smstemplate && config('app.smsUrl')) {
+                                        Mail::to(config('app.smsUrl'))
+                                            ->queue(new SmsMail($record, $mailtemplate->smstemplate->content));
+                                    }
+                                } catch (\Throwable $e) {
+                                    $error = $e->getMessage();
+                                }
+                                EmailLog::create([
+                                    'participant_id'  => $record->id,
+                                    'lan_id'          => $record->lan_id,
+                                    'guardian_email'  => $record->guardian_email,
+                                    'mailtemplate_id' => $mailtemplate->id,
+                                    'smstemplate_id'  => $mailtemplate->smstemplate?->id,
+                                    'error'           => $error,
+                                ]);
+                            }
+                            $records->toQuery()->whereDoesntHave('emailLogs', fn ($q) => $q->whereNotNull('error'))->update(['emailed' => true]);
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }

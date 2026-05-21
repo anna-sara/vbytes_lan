@@ -15,13 +15,9 @@ class SmsMail extends Mailable
     
     public $phone;
     public $name;
+    public $smsContent;
 
-    
-
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($participant)
+    public function __construct($participant, ?string $smsContent = null)
     {
 
         function formatToSwedenPrefix($phoneNumber) {
@@ -50,6 +46,7 @@ class SmsMail extends Mailable
        
         $this->name = $participant->first_name;
         $this->phone = formatToSwedenPrefix($participant->guardian_phone);
+        $this->smsContent = $smsContent;
     }
 
     /**
@@ -68,7 +65,8 @@ class SmsMail extends Mailable
     public function content(): Content
     {
         return new Content(
-           view: 'mail.sms',
+            view: 'mail.sms',
+            with: ['smsContent' => $this->smsContent],
         );
     }
 
