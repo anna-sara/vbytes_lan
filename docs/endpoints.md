@@ -1,5 +1,13 @@
 ## Endpoints
 
+All endpoints live under `/api` and are protected by the `ApiToken` middleware, which
+maps the `X-API-KEY` header to a permission (`key_1` … `key_5`). See [keys.md](keys.md)
+for what each key is allowed to do. A key without permission for the endpoint gets
+`{"code": 401, "message": "Unauthorized"}` (note: sent with HTTP status `200`).
+
+Both `GET` endpoints only return records where `lan_id` is set — participants and
+volunteers without a LAN ID are considered unassigned and are hidden from the API.
+
 <details>
  <summary><code>GET</code> <code><b>/api/data</b></code></summary>
 
@@ -15,20 +23,21 @@
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `application/json`                | json object                                                         |
-> | `401`         | `application/json`                | {"code": 401,"message": "Unauthorized" }                            |
-
+> | `200`         | `application/json`                | {"code": 401,"message": "Unauthorized" } (key without permission)   |
 
 
 ##### Example response different keys
 
 
-> KEY 1
+> KEY 5
 ```json
 {
+    "code": 200,
     "participants": [
         {
             "id": 1,
             "lan_id": 1,
+            "ssn": "200901011234",
             "first_name": "John",
             "surname": "Doe",
             "grade": "8",
@@ -57,7 +66,6 @@
                 "Städ",
                 "Kiosk"
             ],
-            "comment": null,
             "created_at": "2025-11-19T17:45:15.000000Z",
             "updated_at": "2025-11-19T17:48:05.000000Z"
         }
@@ -68,6 +76,7 @@
 > KEY 2
 ```json
 {
+    "code": 200,
     "participants": [
         {
             "lan_id": 1,
@@ -89,10 +98,12 @@
 > KEY 3
 ```json
 {
+    "code": 200,
     "participants": [
         {
             "id": 1,
             "lan_id": 1,
+            "ssn": "200901011234",
             "first_name": "John",
             "surname": "Doe",
             "grade": "8",
@@ -115,6 +126,7 @@
 > KEY 4
 ```json
 {
+    "code": 200,
     "participants": [
         {
             "lan_id": 1,
@@ -126,10 +138,23 @@
 }
 ```
 
+> KEY 1
+```json
+{
+    "code": 401,
+    "message": "Unauthorized"
+}
+```
+
 </details>
 
 <details>
  <summary><code>GET</code> <code><b>/api/version</b></code></summary>
+
+Returns the latest version number per table. The counter is bumped every time a
+participant or volunteer is created, updated or deleted, so a client can poll this
+endpoint and only re-fetch `/api/data` when the number changed. The value is `null`
+if the table has no version rows yet.
 
 ##### Headers
 
@@ -142,17 +167,17 @@
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `application/json`                | json object                                                         |
-> | `401`         | `application/json`                | {"code": 401,"message": "Unauthorized" }                            |
+> | `200`         | `application/json`                | {"code": 401,"message": "Unauthorized" } (key without permission)   |
 
 
 
 ##### Example response different keys
 
 
-> KEY 1
+> KEY 5
 ```json
 {
-    "success": true,
+    "code": 200,
     "participants": 3,
     "volunteers": 2
 }
@@ -161,7 +186,7 @@
 > KEY 2
 ```json
 {
-    "success": true,
+    "code": 200,
     "participants": 3,
     "volunteers": 2
 }
@@ -170,7 +195,7 @@
 > KEY 3
 ```json
 {
-    "success": true,
+    "code": 200,
     "participants": 3
 }
 ```
@@ -178,8 +203,16 @@
 > KEY 4
 ```json
 {
-    "success": true,
+    "code": 200,
     "participants": 3
+}
+```
+
+> KEY 1
+```json
+{
+    "code": 401,
+    "message": "Unauthorized"
 }
 ```
 
@@ -200,7 +233,8 @@
 > |------------------|-----------|--------------------------|-----------------------------------------------------------------------|
 > | `member`         |  required | boolean                  | Participant membership                                                |
 > | `first_name`     |  required | string                   | Participant first name                                                |
-> | `surame`         |  required | string                   | Participant surname                                                   |
+> | `surname`        |  required | string                   | Participant surname                                                   |
+> | `ssn`            |  nullable | string                   | Participant social security number (12 digits, `YYYYMMDDXXXX`)        |
 > | `grade`          |  required | string                   | Participant grade                                                     |
 > | `phone`          |  nullable | string                   | Participant phone number                                              |
 > | `email`          |  nullable | string                   | Participant email                                                     |
@@ -208,7 +242,7 @@
 > | `guardian_phone` |  required | string                   | Participant guardian phone                                            |
 > | `guardian_email` |  required | string                   | Participant guardian email                                            |
 > | `is_visiting`    |  required | boolean                  | 1 = Visiting , 0 = LAN                                                |
-> | `gdpr`           |  required | booelan                  | Participant accepts gdpr                                              |
+> | `gdpr`           |  required | boolean                  | Participant accepts gdpr                                              |
 > | `friends`        |  nullable | string                   | Participant want to sit with                                          |
 > | `special_diet`   |  nullable | string                   | Participant special diet                                              |
 
@@ -218,6 +252,7 @@
     "member": 1,
     "first_name": "Joe",
     "surname": "Doe",
+    "ssn": "200901011234",
     "grade": "8",
     "phone": null,
     "email": null,
@@ -238,7 +273,8 @@
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `application/json`                | {"code": 200, "message": "Participant was created successfully" }   |
-> | `401`         | `application/json`                | {"code": 401,"message": "Unauthorized" }                            |
+> | `200`         | `application/json`                | {"code": 401,"message": "Unauthorized" } (key without permission)   |
+> | `422`         | `application/json`                | Validation errors                                                   |
 
 
 </details>
@@ -258,10 +294,10 @@
 > | name             |  type     | data type                | description                                                           |
 > |------------------|-----------|--------------------------|-----------------------------------------------------------------------|
 > | `first_name`     |  required | string                   | Volunteer first name                                                  |
-> | `surame`         |  required | string                   | Volunteer surname                                                     |
+> | `surname`        |  required | string                   | Volunteer surname                                                     |
 > | `phone`          |  required | string                   | Volunteer phone number                                                |
 > | `email`          |  required | string                   | Volunteer email                                                       |
-> | `gdpr`           |  required | booelan                  | Volunteer accepts gdpr                                                |
+> | `gdpr`           |  required | boolean                  | Volunteer accepts gdpr                                                |
 > | `areas`          |  required | json                     | Volunteer want to help put in this areas                              |
 
 > 
@@ -285,10 +321,8 @@
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `application/json`                | {"code": 200, "message": "Volunteer was created successfully" }     |
-> | `401`         | `application/json`                | {"code": 401,"message": "Unauthorized" }                            |
+> | `200`         | `application/json`                | {"code": 401,"message": "Unauthorized" } (key without permission)   |
+> | `422`         | `application/json`                | Validation errors                                                   |
 
 
 </details>
-
-
-
